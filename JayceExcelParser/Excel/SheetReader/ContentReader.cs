@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using JayceExcelParser.Excel;
 using OfficeOpenXml;
 
 namespace JayceExcelParser.Excel
 {
-    class SchemaReader
+    class ContentReader
     {
-        public void Read(ExcelPackage exp)
+        public ExcelContentSrc Read(ExcelWorksheet sheet)
         {
 
         }

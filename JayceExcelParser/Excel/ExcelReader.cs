@@ -6,6 +6,7 @@ using System.Text;
 using JayceExcelParser.Generate;
 using OfficeOpenXml;
 using Serilog;
+using JayceExcelParser.Common;
 
 namespace JayceExcelParser.Excel
 {
@@ -13,23 +14,39 @@ namespace JayceExcelParser.Excel
     {
         public ExcelReadResult Read(string excelRootDirectory, out ExcelSrc resultExcelSrc)
         {
-            resultExcelSrc = new ExcelSrc();
-
-            if (Configuration.CurrentMode == Mode.REAL)
+            if (Configuration.CurrentMode == Mode.SIMULATION)
             {
-                foreach (string item in Directory.EnumerateFiles(excelRootDirectory, "*.xlsx"))
-                {
-                    Console.WriteLine($"File : {item}");
-                }
-            }
-            else if (Configuration.CurrentMode == Mode.SIMULATION)
-            {
+                resultExcelSrc = new ExcelSrc();
                 var excel = new ExcelPackage(new FileInfo(Configuration.Simulation.ExcelPaths[0]));
 
                 foreach (var sheet in excel.Workbook.Worksheets)
                 {
                     Console.WriteLine($"Sheet Name : {sheet.Name}");
+                    var dms = sheet.Dimension;
+
+                    if (dms != null)
+                    {
+                        //Console.WriteLine($"columns : {dms.Columns} , rows;  {dms.Rows}");
+                        //var start = dms.Start;
+                        //var end = dms.End;
+
+                        //Console.WriteLine($"Start : {start.Address} , {start.ToString()} , {end.ToString()}");
+                        //Console.WriteLine($"End Col, Row : {end.Column} , {end.Row}");
+                    }
+
+                    sheet.ForeachColumn(1, ReadFlags.IgnoreCase, (addr, content) => { Console.WriteLine(content); });
+
+                    Console.WriteLine();
                 }
+
+                return ExcelReadResult.SUCCESS;
+            }
+
+            resultExcelSrc = new ExcelSrc();
+
+            foreach (string item in Directory.EnumerateFiles(excelRootDirectory, "*.xlsx"))
+            {
+                Console.WriteLine($"File : {item}");
             }
 
             return ExcelReadResult.SUCCESS;

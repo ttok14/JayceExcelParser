@@ -10,6 +10,18 @@ namespace JayceExcelParser
 
     static class Configuration
     {
+        public static class Rules
+        {
+            /// <summary> Represent the ignorable cell with a prefix </summary>
+            public static string IgnoreCasePrefix = "_";
+
+            /// <summary> Represent an enum sheet </summary>
+            public static string EnumSheetPrefix = "enum_";
+
+            /// <summary> Represent an schema definition sheet </summary>
+            public static string SchemaSheetPrefix = "schema_";
+        }
+
         public static class Simulation
         {
             public static string[] ExcelPaths = new string[]

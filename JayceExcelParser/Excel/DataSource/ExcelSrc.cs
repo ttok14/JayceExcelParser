@@ -6,6 +6,7 @@ namespace JayceExcelParser.Excel
 {
     class ExcelSrc
     {
-        public SchemaSrc SchemaInfo;
+        public ExcelContentSrc Content { get; private set; }
+        public SchemaSrc SchemaInfo { get; private set; }
     }
 }
