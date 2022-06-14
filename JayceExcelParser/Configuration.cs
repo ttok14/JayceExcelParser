@@ -15,8 +15,8 @@ namespace JayceExcelParser
             /// <summary> Represent the ignorable cell with a prefix </summary>
             public static string IgnoreCasePrefix = "_";
 
-            /// <summary> Represent an enum sheet </summary>
-            public static string EnumSheetPrefix = "enum_";
+            /// <summary> Represent an enum sheet's name </summary>
+            public static string EnumSheetPredefinedName = "enum";
 
             /// <summary> Represent an schema definition sheet </summary>
             public static string SchemaSheetPrefix = "schema_";
@@ -26,7 +26,8 @@ namespace JayceExcelParser
         {
             public static string[] ExcelPaths = new string[]
             {
-                @"C:\Users\Jayce\Desktop\Temp\excelTest\tables\Ability_table.xlsx"
+                // @"C:\Users\Jayce\Desktop\Temp\excelTest\tables\Ability_table.xlsx"
+                @"C:\Users\Jayce\Desktop\Temp\excelTest\tables\Enum_Table.xlsx"
             };
         }
 

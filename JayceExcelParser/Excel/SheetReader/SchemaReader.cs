@@ -9,7 +9,7 @@ namespace JayceExcelParser.Excel
     {
         public SchemaSrc Read(ExcelWorksheet sheet)
         {
-            
+            return null;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace JayceExcelParser.Excel
     [System.Flags]
     internal enum ReadFlags
     {
-        None = 0x0,
+        None = 0x00,
         IgnoreCase = 0x01,
     }
 }

@@ -23,6 +23,14 @@ namespace JayceExcelParser.Excel
                 {
                     Console.WriteLine($"Sheet Name : {sheet.Name}");
                     var dms = sheet.Dimension;
+                    ExcelHelper.ToSheetType(sheet.Name, out var sheetType);
+
+                    if (sheetType == SheetType.Enum)
+                    {
+                        var reader = new EnumReader();
+                        var enumOutput = reader.Read(sheet);
+                        resultExcelSrc.SetEnum(enumOutput);
+                    }
 
                     if (dms != null)
                     {
@@ -34,7 +42,7 @@ namespace JayceExcelParser.Excel
                         //Console.WriteLine($"End Col, Row : {end.Column} , {end.Row}");
                     }
 
-                    sheet.ForeachColumn(1, ReadFlags.IgnoreCase, (addr, content) => { Console.WriteLine(content); });
+                    // sheet.ForeachColumn(1, ReadFlags.IgnoreCase, (addr, content) => { Console.WriteLine(content); });
 
                     Console.WriteLine();
                 }
