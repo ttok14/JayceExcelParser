@@ -8,6 +8,44 @@ namespace JayceExcelParser.Common
 {
     static class ExcelHelper
     {
+        #region ======:: ExcelWorkSheet Extension ::=======
+
+        public static string GetValueEx(this ExcelWorksheet sheet, int row, int col)
+        {
+            var dms = sheet.Dimension;
+            if (dms == null)
+            {
+                return string.Empty;
+            }
+
+            if (dms.IsRowInRange(row) == false || dms.IsColumnInRange(col) == false)
+            {
+                return string.Empty;
+            }
+
+            return sheet.Cells[row, col]?.Text;
+        }
+
+        public static bool IsRowInRange(this ExcelAddressBase dimension, int row)
+        {
+            if (dimension == null)
+            {
+                return false;
+            }
+
+            return row >= dimension.Start.Row && row <= dimension.End.Row;
+        }
+
+        public static bool IsColumnInRange(this ExcelAddressBase dimension, int column)
+        {
+            if (dimension == null)
+            {
+                return false;
+            }
+
+            return column >= dimension.Start.Column && column <= dimension.End.Column;
+        }
+
         public static bool ForeachColumn(this ExcelWorksheet sheet, int row, ReadFlags flags, Action<ExcelAddress, string> onRead)
         {
             if (onRead == null)
@@ -106,7 +144,7 @@ namespace JayceExcelParser.Common
             return result;
         }
 
-        public static int FindRow(this ExcelWorksheet sheet, int column, Predicate<string> match, ReadFlags flags = ReadFlags.None, int beginRow = 1, int endRow = -1)
+        public static int FindRow(this ExcelWorksheet sheet, int column, Func<int, string, bool> match, ReadFlags flags = ReadFlags.None, int beginRow = 1, int endRow = -1)
         {
             if (match == null)
             {
@@ -136,7 +174,7 @@ namespace JayceExcelParser.Common
             {
                 var cell = sheet.Cells[row, column];
 
-                if (EvaluateFlag(flags, cell.Text) && match.Invoke(cell.Text))
+                if (EvaluateFlag(flags, cell.Text) && match.Invoke(row, cell.Text))
                 {
                     result = row;
                     break;
@@ -186,6 +224,38 @@ namespace JayceExcelParser.Common
             return desiredRow;
         }
 
+        public static bool InspectValue(this ExcelWorksheet sheet, int col, int row, ValueConditionOption condition)
+        {
+            return TakeValue(sheet, col, row, condition, out var dummy);
+        }
+
+        public static bool TakeValue(this ExcelWorksheet sheet, int col, int row, ValueConditionOption condition, out string cellValue)
+        {
+            cellValue = GetValueEx(sheet, row, col);
+
+            // Integer 정수 여부
+            if (HasFlag((int)condition.condition, (int)ValueCondition.Integer))
+            {
+                if (int.TryParse(cellValue, out var dummy) == false)
+                {
+                    return false;
+                }
+            }
+
+            // 유효한 Identifier 이름 여부
+            if (HasFlag((int)condition.condition, (int)ValueCondition.ValidIdentifier))
+            {
+                if (LexicalHelper.IsValidIdentifierName(cellValue) == false)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
+
         public static bool ToSheetType(string sheetName, out SheetType resultSheetType)
         {
             resultSheetType = default(SheetType);
@@ -211,7 +281,17 @@ namespace JayceExcelParser.Common
             return true;
         }
 
-        static bool EvaluateFlag(ReadFlags flag, string value)
+        public static bool EnumHasFlags(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                return false;
+            }
+
+            return content.Contains("[Flags]", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool EvaluateFlag(ReadFlags flag, string value)
         {
             //if (string.IsNullOrEmpty(value))
             //{
@@ -229,7 +309,7 @@ namespace JayceExcelParser.Common
             return true;
         }
 
-        private static bool HasFlag(int combined, int targetFlag)
+        public static bool HasFlag(int combined, int targetFlag)
         {
             return (combined & targetFlag) != 0;
         }

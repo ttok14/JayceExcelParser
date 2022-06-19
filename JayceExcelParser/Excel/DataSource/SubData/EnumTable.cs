@@ -11,11 +11,18 @@ namespace JayceExcelParser.Excel.DataSource
             public int value;
             public string name;
             public string comment;
+
+            public Element(int value, string name, string comment)
+            {
+                this.value = value;
+                this.name = name;
+                this.comment = comment;
+            }
         }
 
-        public string typeName;
+        public string identifier;
         public List<Element> elements = new List<Element>();
 
-        public bool isFlags;
+        public bool useFlags;
     }
 }

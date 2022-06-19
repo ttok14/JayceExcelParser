@@ -21,7 +21,6 @@ namespace JayceExcelParser.Excel
 
                 foreach (var sheet in excel.Workbook.Worksheets)
                 {
-                    Console.WriteLine($"Sheet Name : {sheet.Name}");
                     var dms = sheet.Dimension;
                     ExcelHelper.ToSheetType(sheet.Name, out var sheetType);
 
@@ -30,6 +29,8 @@ namespace JayceExcelParser.Excel
                         var reader = new EnumReader();
                         var enumOutput = reader.Read(sheet);
                         resultExcelSrc.SetEnum(enumOutput);
+
+                        Console.WriteLine(enumOutput.ToString());
                     }
 
                     if (dms != null)

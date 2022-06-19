@@ -31,6 +31,8 @@ namespace JayceExcelParser
             };
         }
 
+        public static bool ENABLE_LOG = true;
+
         public const Mode CurrentMode = Mode.SIMULATION;
 
         internal static void Setup(ref string[] args)

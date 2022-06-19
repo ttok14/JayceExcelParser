@@ -8,6 +8,19 @@ namespace JayceExcelParser.Common
 {
     static class Helper
     {
+        public static bool HasWhiteSpace(this string text)
+        {
+            foreach (var c in text)
+            {
+                if (char.IsWhiteSpace(c))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static ExitCode GenerateResultToExitCode(GenerateResult result)
         {
             if (result == GenerateResult.SUCCESS)
